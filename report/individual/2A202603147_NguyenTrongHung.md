@@ -15,6 +15,17 @@
 ## 2. Đọc frame (Bước 2)
 Hai frame đọc kỹ: `s01f00` và `s01f54`. Ảnh: `t1-s01f00-3d.png`, `t1-s01f00-top.png`, `t1-s01f54-3d.png`, `t1-s01f54-top.png` (ảnh nhìn từ trên xuống, có đánh dấu phía trước, +x, +y).
 
+- Frame `s01f00`:
+  - Khung 3D (`t1-s01f00-3d.png`):
+    ![t1-s01f00-3d.png](images/t1-s01f00-3d.png)
+  - Nhìn từ trên xuống (`t1-s01f00-top.png`):
+    ![t1-s01f00-top.png](images/t1-s01f00-top.png)
+- Frame `s01f54`:
+  - Khung 3D (`t1-s01f54-3d.png`):
+    ![t1-s01f54-3d.png](images/t1-s01f54-3d.png)
+  - Nhìn từ trên xuống (`t1-s01f54-top.png`):
+    ![t1-s01f54-top.png](images/t1-s01f54-top.png)
+
 | Frame | Phía trước xe ở cạnh nào của ảnh nhìn từ trên xuống; +x, +y chỉ về đâu | Mặt đường (phẳng/dốc; thấp hơn LiDAR ~ m) | Vật xa nhất đọc được (~ m) | Loại vật thấy | Vật phía sau / hai bên | Cụm chưa đọc được |
 |---|---|---|---|---|---|---|
 | `s01f00` | Phía trước là hướng `-y`; `+x` chỉ sang trái, `+y` chỉ ra phía sau | Mặt đường tương đối phẳng, thấp hơn LiDAR khoảng `~1.7 m` | `~40–50 m` | Car, Truck, Cyclist, Pedestrian | Có phương tiện và vật cản hai bên / phía sau trên góc nhìn BEV | Cụm điểm thưa ở xa quá 40 m |
@@ -39,6 +50,13 @@ Tám frame lướt:
 ## 3. Ba cuboid có hướng dẫn (Bước 3)
 Ảnh: `t2-a-car.png`, `t2-b-bus-truck.png`, `t2-c-ped-cyclist.png`.
 
+- (a) Xe con gần (`t2-a-car.png`):
+  ![t2-a-car.png](images/t2-a-car.png)
+- (b) Xe buýt hoặc xe tải (`t2-b-bus-truck.png`):
+  ![t2-b-bus-truck.png](images/t2-b-bus-truck.png)
+- (c) Người đi bộ hoặc xe hai bánh (`t2-c-ped-cyclist.png`):
+  ![t2-c-ped-cyclist.png](images/t2-c-ped-cyclist.png)
+
 | Vật | Frame, idx | Class | Mũi tên yaw đúng hướng? | Đáy chạm đường? | Đã kiểm Top/Side/Front + ảnh? | Kích thước trong bảng 4.3? |
 |---|---|---|---|---|---|---|
 | (a) xe con gần | `s01f00` (`t2-a-car.png`) | `Car` | Đúng hướng đầu xe | Đáy chạm mặt đường | Đã kiểm Top/Side/Front và `preview` | Nằm trong khoảng chuẩn bảng 4.3 |
@@ -56,6 +74,15 @@ Nguyên nhân ghi là **giả thuyết**. Frame mượn thì ghi rõ nguồn: ta
 | 2. Thưa ở xa | `t4-2-thua-o-xa.png` (task `D13-2A202603147`) | Khoảng cách xa làm góc phân kỳ giữa các tia LiDAR mở rộng | Số điểm trên bề mặt vật rất ít, khó nhìn rõ biên dạng 3D | Chỉ vẽ nếu thấy khoảng 15–20% thể tích; nếu không đủ cơ sở thì bỏ qua (`LOW_VISIBILITY`) |
 | 3. Phản xạ thấp / ít điểm bất thường | `t4-3-phan-xa-thap.png` (task `D13-2A202603147`) | Giả thuyết: bề mặt vật tối màu, kính hoặc góc tới lớn làm tia phản xạ yếu | Mật độ điểm trên thân vật thưa bất thường dù ở khoảng cách không quá xa | Đối chiếu thêm ảnh camera, giữ kích thước hợp lý theo bảng 4.3 và ghi giả thuyết |
 | 4. Điểm lạ | `t4-4-diem-la.png` (task `D13-2A202603147`) | Giả thuyết: nhiễu cảm biến, bụi/khói hoặc phản xạ đa đường | Cụm điểm lơ lửng hoặc rời rạc không khớp với vật thể trên camera | Không gán nhãn thành vật |
+
+- Hiện tượng 1 — Bóng che (`t4-1-bong-che.png`):
+  ![t4-1-bong-che.png](images/t4-1-bong-che.png)
+- Hiện tượng 2 — Thưa ở xa (`t4-2-thua-o-xa.png`):
+  ![t4-2-thua-o-xa.png](images/t4-2-thua-o-xa.png)
+- Hiện tượng 3 — Phản xạ thấp / ít điểm bất thường (`t4-3-phan-xa-thap.png`):
+  ![t4-3-phan-xa-thap.png](images/t4-3-phan-xa-thap.png)
+- Hiện tượng 4 — Điểm lạ (`t4-4-diem-la.png`):
+  ![t4-4-diem-la.png](images/t4-4-diem-la.png)
 
 ## 5. Số từ cuboid của tôi (Bước 5)
 Lấy từ `submission/D13-2A202603147-bangA.csv`; số điểm lấy từ cột `points_in` của `submission/D13-2A202603147-tukiem.csv`. Mặt đường khoảng −1,7 m: z đáy lệch hơn 0,3 m là lơ lửng hoặc chìm.
