@@ -59,9 +59,9 @@ Tám frame lướt:
 
 | Vật | Frame, idx | Class | Mũi tên yaw đúng hướng? | Đáy chạm đường? | Đã kiểm Top/Side/Front + ảnh? | Kích thước trong bảng 4.3? |
 |---|---|---|---|---|---|---|
-| (a) xe con gần | `s01f00` (`t2-a-car.png`) | `Car` | Đúng hướng đầu xe | Đáy chạm mặt đường | Đã kiểm Top/Side/Front và `preview` | Nằm trong khoảng chuẩn bảng 4.3 |
-| (b) xe buýt hoặc xe tải | `s01f00` (`t2-b-bus-truck.png`) | `Truck` / `Bus` | Đúng hướng đầu xe | Đáy chạm mặt đường | Đã kiểm Top/Side/Front và `preview` | Nằm trong khoảng chuẩn bảng 4.3 |
-| (c) người đi bộ hoặc xe hai bánh | `s01f00` (`t2-c-ped-cyclist.png`) | `Pedestrian` / `Cyclist` | Đúng hướng di chuyển | Đáy chạm mặt đường | Đã kiểm Top/Side/Front và `preview` | Nằm trong khoảng chuẩn bảng 4.3 |
+| (a) xe con gần | `s01f00, idx=1` | `Car` | Đúng hướng (`yaw_deg = 268.9°`) | Đáy chạm đường (`z_bottom = -1.834 m`, `ground_gap_m = 0.01 m`) | Đã kiểm Top/Side/Front và `preview` | Đúng chuẩn (`l = 5.000 m, w = 1.670 m, h = 1.780 m`) |
+| (b) xe buýt hoặc xe tải | `s01f00, idx=8` | `Bus` | Đúng hướng (`yaw_deg = 0.0°`) | Đáy chạm đường (`z_bottom = -1.676 m`, `ground_gap_m = 0.13 m`) | Đã kiểm Top/Side/Front và `preview` | Đúng chuẩn (`l = 7.000 m, w = 3.000 m, h = 3.670 m`) |
+| (c) người đi bộ hoặc xe hai bánh | `s01f00, idx=3` | `Cyclist` | Đúng hướng (`yaw_deg = 274.8°`) | Đáy chạm đường (`z_bottom = -1.670 m`, `ground_gap_m = 0.03 m`) | Đã kiểm Top/Side/Front và `preview` | Đúng chuẩn (`l = 2.000 m, w = 1.000 m, h = 1.670 m`) |
 
 - **Vòng hiệu chuẩn và vật bỏ qua:** Chốt cách căn mũi tên hướng `+X` về đầu xe, ước lượng phần kích thước bị khuất theo bảng 4.3 và đặt đáy hộp chạm mặt đường (`z_bottom ≈ -1.7 m`). Các cụm điểm ở quá xa (dưới 15–20% thể tích nhận diện được, `LOW_VISIBILITY`) được bỏ qua theo guideline.
 
@@ -89,25 +89,33 @@ Lấy từ `submission/D13-2A202603147-bangA.csv`; số điểm lấy từ cột
 
 | Cuboid (frame, idx, class) | z (m) | h (m) | z đáy = z − h/2 (m) | dist_m (m) | r = √(x²+y²+z²) (m) | yaw_deg (°) | Nhận xét (lơ lửng / chìm / chạm đường) |
 |---|---|---|---|---|---|---|---|
-| Cuboid mẫu 1 (xem bảng A) | Điền từ bảng A | Điền từ bảng A | Điền từ bảng A | Điền từ bảng A | Điền từ bảng A | Điền từ bảng A | Chạm đường (`z_bottom` quanh `-1.7 m`) |
-| Cuboid mẫu 2 (xem bảng A) | Điền từ bảng A | Điền từ bảng A | Điền từ bảng A | Điền từ bảng A | Điền từ bảng A | Điền từ bảng A | Chạm đường (`z_bottom` quanh `-1.7 m`) |
-| Cuboid mẫu 3 (xem bảng A) | Điền từ bảng A | Điền từ bảng A | Điền từ bảng A | Điền từ bảng A | Điền từ bảng A | Điền từ bảng A | Chạm đường (`z_bottom` quanh `-1.7 m`) |
+| `s01f00, idx=1, Car` | `-0.944` | `1.780` | `-1.834` | `3.34` | `3.47` | `268.9°` | Chạm đường (`ground_gap_m = 0.01 m`, lệch `0.134 m < 0.3 m` so với `-1.7 m`) |
+| `s01f00, idx=3, Cyclist` | `-0.835` | `1.670` | `-1.670` | `10.81` | `10.84` | `274.8°` | Chạm đường (`ground_gap_m = 0.03 m`, sát mức chuẩn `-1.7 m`) |
+| `s04f54, idx=2, Car` | `-1.288` | `1.550` | `-2.063` | `40.51` | `40.53` | `92.3°` | Chạm mặt đường tại chỗ ở xa (`ground_gap_m = 0.19 m`, mặt đường ở `~40.5 m` thấp hơn gần gốc) |
 
-- **(a) Cuboid gần nhất và xa nhất:** Đối chiếu cột `dist_m` trong `submission/D13-2A202603147-bangA.csv` và tính `r = √(x² + y² + z²)`.
-- **(b) So sánh kích thước với bảng 4.3:** Các kích thước `length, width, height` cơ bản bám theo bảng 4.3; có 2 trường hợp cảnh báo kích thước trong `selfcheck` (`Pedestrian` có `width=1.78 m` và `Car` có `height=2.35 m`).
-- **(c) Góc `yaw_deg`:** Xe cùng chiều phía trước (`-y`) có `yaw_deg` gần `270°`, xe ngược chiều có `yaw_deg` gần `90°`.
+- **(a) Cuboid gần nhất và xa nhất:**
+  - **Cuboid gần nhất:** `s01f00, idx=1 (Car)` có tọa độ tâm `(x = 3.315 m, y = -0.384 m, z = -0.944 m)` → khoảng cách ngang `dist_m = √(3.315² + (-0.384)²) = 3.34 m`, khoảng cách 3D `r = √(3.315² + (-0.384)² + (-0.944)²) = 3.47 m` (`3.468 m`).
+  - **Cuboid xa nhất:** `s04f54, idx=2 (Car)` có tọa độ tâm `(x = 7.716 m, y = -39.768 m, z = -1.288 m)` → khoảng cách ngang `dist_m = √(7.716² + (-39.768)²) = 40.51 m`, khoảng cách 3D `r = √(7.716² + (-39.768)² + (-1.288)²) = 40.53 m` (`40.530 m`).
+- **(b) So sánh kích thước `l, w, h` với bảng 4.3:**
+  - **Xe hai bánh (`s01f00, idx=3, Cyclist`):** `length = 2.000 m, width = 1.000 m, height = 1.670 m` (đạt chuẩn bảng 4.3). Với người đi bộ `s01f00, idx=5 (Pedestrian)` có `length = 0.550 m, width = 1.780 m, height = 1.890 m`: chiều `width = 1.780 m` vượt ngoài khoảng `0.2–1.3 m` do cụm điểm ở khoảng cách `22.19 m` bị thưa và hộp bị kéo dư theo chiều ngang.
+  - **Xe con (`s01f00, idx=1, Car`):** `length = 5.000 m, width = 1.670 m, height = 1.780 m` (cả 3 chiều đều nằm trong khoảng chuẩn bảng 4.3: dài `3.8–5.3 m`, rộng `1.6–2.2 m`, cao `1.4–2.0 m`). Riêng cuboid `s03f01, idx=5 (Car)` có `length = 4.670 m, width = 2.210 m, height = 2.350 m` bị cờ `height=2.35 ngoài khoảng 1.2–2.3 của Car` do hộp bao hơi cao phần nóc của xe gầm cao ở khoảng cách `20.98 m`.
+- **(c) Góc `yaw_deg` của xe cùng chiều và ngược chiều:**
+  - **Xe cùng chiều phía trước (`-y`):** `s01f54, idx=3 (Car)` tại `(x = 0.033 m, y = -9.435 m)` có `yaw_deg = 272.9°`, và `s03f01, idx=1 (Car)` tại `(x = -0.338 m, y = -8.584 m)` có `yaw_deg = 271.0°` — rất gần `270°`.
+  - **Xe ngược chiều (`+y`):** `s02f12, idx=2 (Car)` tại `(x = 3.932 m, y = -9.688 m)` có `yaw_deg = 88.0°`, và `s02f52, idx=2 (Car)` tại `(x = 4.751 m, y = -8.260 m)` có `yaw_deg = 91.8°` — rất gần `90°`.
 
 Mật độ theo khoảng cách (4 cuboid ở các `dist_m` khác nhau từ `submission/D13-2A202603147-tukiem.csv`):
 
 | Cuboid (frame, idx, class) | dist_m (m) | Số điểm (`points_in`) |
 |---|---|---|
-| Khoảng cách gần (0–10 m) | Điền từ phiếu tự kiểm | Điền từ `points_in` |
-| Khoảng cách 10–20 m | Điền từ phiếu tự kiểm | Điền từ `points_in` |
-| Khoảng cách 20–30 m | Điền từ phiếu tự kiểm | Điền từ `points_in` |
-| Khoảng cách 30–50 m | Điền từ phiếu tự kiểm | Điền từ `points_in` |
+| `s01f00, idx=1, Car` (bin `0–10 m`) | `3.34` (`3.3`) | `2822` |
+| `s01f00, idx=6, Car` (bin `10–20 m`) | `16.97` (`17.0`) | `815` |
+| `s04f54, idx=6, Car` (bin `20–30 m`) | `27.41` (`27.4`) | `213` |
+| `s04f54, idx=2, Car` (bin `30–50 m`) | `40.51` (`40.5`) | `70` |
 
-- **Quy luật mật độ và tự kiểm (`selfcheck`):** Khi khoảng cách tăng lên thì số điểm LiDAR (`points_in`) giảm nhanh theo khoảng cách, phù hợp với đường cong suy giảm mật độ điểm trong bài giảng. Trong `selfcheck` còn 3/53 cảnh báo (`width=1.78` của Pedestrian, `height=2.35` của Car, và `82 điểm sát ngay ngoài mép` do có điểm của vật/nền lân cận sát biên hộp).
-- **Đổi kiểm:** Đã đối chiếu số liệu với bảng A.
+- **Quy luật mật độ và tự kiểm (`selfcheck`):**
+  - **Quy luật:** Khi khoảng cách `dist_m` tăng gấp khoảng `2–2.5` lần thì số điểm LiDAR trong hộp (`points_in`) giảm xuống chỉ còn khoảng `1/3` đến `1/4` (từ `2822` điểm ở `3.34 m` giảm xuống `815` điểm ở `16.97 m`, `213` điểm ở `27.41 m` và còn `70` điểm ở `40.51 m`). Kết quả này bám rất sát đường cong trung vị của xe con trên slide bài giảng (`~1968` điểm ở `0–10 m`, `~718` ở `10–20 m`, `~214` ở `20–30 m`, `~72` ở `30–40 m`).
+  - **Tự kiểm và chỉnh sửa sau `preview` / `selfcheck`:** Đã kiểm tra và chỉnh lại độ cao đáy `z_bottom` cùng góc xoay `yaw` của các hộp xe con ở `s01f00` (`idx=1, idx=2`) và `s02f12` (`idx=4`, bật `occluded=1`) để khớp với mặt đường và hướng xe trên camera. Ba cảnh báo giữ nguyên gồm: `s01f00, idx=5 (Pedestrian)` (`width=1.78 m`), `s03f01, idx=5 (Car)` (`height=2.35 m`), và `s04f26, idx=4 (Car)` (`82 điểm sát ngay ngoài mép` do có cụm điểm của mặt đường/vật lân cận sát mép hộp ở khoảng cách `20.93 m`, trong khi `ground_gap_m = 0.01 m` đã sát mặt đường).
+- **Đổi kiểm:** Đã đối chiếu chéo 2 con số trong Mục 5 (`s01f00, idx=1` với `dist_m = 3.34 m, points_in = 2822` và `s04f54, idx=2` với `dist_m = 40.51 m, points_in = 70`) với Bảng A và Phiếu tự kiểm, kết quả khớp 100%.
 
 ## 6. Ý nghĩa của nhãn, cách dùng AI và điều còn chưa chắc
 - **(a) Ý nghĩa của nhãn 3D:**
