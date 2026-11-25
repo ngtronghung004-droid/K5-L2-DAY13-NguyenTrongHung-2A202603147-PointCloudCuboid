@@ -5,7 +5,7 @@
 - **Task CVAT:** `D13-2A202603147`
 - **10 frame được giao:** `s01f00`, `s01f54`, `s02f12`, `s02f52`, `s03f01`, `s03f46`, `s04f26`, `s04f54`, `s05f17`, `s05f43`
 - **Môi trường:** Windows, Chrome, CVAT 3D v2.83.0
-- **Tổng quan kết quả:** Tổng cộng 53 cuboid trên 10 frame (frame `s01f00` có 8 cuboid; hai frame `s03f46` và `s05f43` có 4 cuboid, các frame còn lại từ 5–6 cuboid). Kết quả `selfcheck` có 3/53 cuboid bị gắn cờ cảnh báo.
+- **Tổng quan kết quả:** Tổng cộng **53 cuboid** trên 10 frame (frame đầu `s01f00` có 8 cuboid; hai frame `s03f46` và `s05f43` ít nhất với 4 cuboid mỗi frame vì ngoài 4 phương tiện rõ trong vùng gần thì các cụm điểm còn lại ở xa quá thưa dưới 15–20% thể tích nên bỏ qua theo quy tắc `LOW_VISIBILITY` để không đoán mò; các frame còn lại có 5–6 cuboid). Kết quả `selfcheck` có **3/53 cuboid** bị gắn cờ cảnh báo. Phần tự tin nhất là việc xác định class, hướng mũi tên `yaw` và căn đáy `z_bottom` chạm mặt đường cho các phương tiện trong phạm vi 25–30 m; phần còn yếu nhất là ước lượng kích thước bao trọn đối với người đi bộ hoặc vật thể ở xa trên 20 m khi cụm điểm LiDAR bị thưa hoặc khuất một phần.
 
 **Cách dùng CVAT:**
 - Đổi góc nhìn: xoay khung 3D (chuột trái) để nhìn từ trên xuống (BEV), kéo chuột phải để dời, con lăn chuột để thu phóng.
